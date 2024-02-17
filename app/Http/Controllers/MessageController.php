@@ -7,6 +7,7 @@ use App\Models\Message;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class MessageController extends Controller
@@ -33,7 +34,25 @@ class MessageController extends Controller
 
         Message::create($attributes);
 
-        return redirect('/');
+        $url = URL::temporarySignedRoute(
+            'messages.show',
+            now()->addMinutes(1),
+            ['token' => $token]
+        );
+
+        return redirect()->back()->with('messageStored', [
+            'url' => $url,
+            'password' => $password
+        ]);
+    }
+
+    public function show(Request $request, string $token): Renderable
+    {
+        if (!$request->hasValidSignature()) {
+            abort(401);
+        }
+
+        return view('messages.show');
     }
 
 }

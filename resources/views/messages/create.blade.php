@@ -24,4 +24,20 @@
         <button type="submit" class="btn btn-primary">Versleutel bericht</button>
     </form>
 
+    @if (session('messageStored'))
+        <x-notifications.success>
+            <div class="mb-2">
+                Bericht succesvol versleuteld! Gebruik onderstaande gegevens om het bericht te openen.
+            </div>
+            <div class="mb-2">
+                <a href="{{ session('messageStored')['url'] }}">Ontsleutel pagina</a>
+            </div>
+            <div>
+                Wachtwoord:
+            </div>
+            <div>
+                {{ session('messageStored')['password'] }}
+            </div>
+        </x-notifications.success>
+    @endif
 @endsection
