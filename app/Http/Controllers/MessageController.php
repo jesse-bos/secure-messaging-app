@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Mail\MessageNotification;
 use App\Models\Message;
+use App\Services\ColleagueService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class MessageController extends Controller
@@ -16,14 +20,20 @@ class MessageController extends Controller
 
     public function create(): Renderable
     {
-        return view('messages.create');
+        $colleagueService = new ColleagueService();
+        $colleagues = $colleagueService->getColleagues();
+
+        return view('messages.create', [
+            'colleagues' => $colleagues
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         // encrypting the message body takes place in the Message model (casts)
         $attributes = $request->validate([
-            'body' => ['required', 'string']
+            'body' => ['required', 'string'],
+            'mail_to' => ['sometimes', 'nullable', 'email']
         ]);
 
         // bcrypt hashing takes place in the Message model (setPasswordAttribute)
@@ -40,6 +50,10 @@ class MessageController extends Controller
             now()->addMinutes(30),
             ['token' => $token]
         );
+
+        if ($mail_to = Arr::get($attributes, 'mail_to')) {
+            Mail::to($mail_to)->send(new MessageNotification($password, $url));
+        }
 
         return redirect()->back()->with('messageStored', [
             'url' => $url,

@@ -8,8 +8,12 @@
         <div class="row">
             <div class="col">
                 <div class="form-group">
-                    <select name="colleague_email" class="form-control">
+                    <select name="mail_to" class="form-control">
                         <option value="">Selecteer een collega</option>
+                        @foreach ($colleagues as $colleague)
+                            <option value="{{ $colleague['email'] }}">{{ $colleague['name'] }} -
+                                {{ $colleague['email'] }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

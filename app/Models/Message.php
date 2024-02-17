@@ -18,6 +18,7 @@ class Message extends Model
         'body',
         'password',
         'token',
+        'mail_to'
     ];
 
     /**
