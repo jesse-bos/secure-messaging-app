@@ -7,6 +7,7 @@ use App\Models\Message;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -52,7 +53,30 @@ class MessageController extends Controller
             abort(401);
         }
 
-        return view('messages.show');
+        return view('messages.show', [
+            'authenticated' => false,
+            'token' => $token
+        ]);
+    }
+
+    public function authenticate(Request $request, string $token): Renderable|RedirectResponse
+    {
+        $request->validate([
+            'password' => ['required', 'string']
+        ]);
+
+        $message = Message::where('token', $token)->firstOrFail();
+
+        if (Hash::check($request->password, $message->password)) {
+            return view('messages.show', [
+                'authenticated' => true,
+                'token' => $message->token,
+                // decrypting the message body takes place in the Message model (casts)
+                'body' => $message->body
+            ]);
+        } else {
+            return back()->with('error', 'Wachtwoord onjuist.');
+        }
     }
 
 }
