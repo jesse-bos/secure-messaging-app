@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,4 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\MessageController::class, 'create']);
+Route::get('/', function () {
+    return redirect()->route('messages.create');
+});
+
+Route::prefix('messages')->name('messages.')->group(function () {
+    Route::get('/create', [MessageController::class, 'create'])->name('create');
+    Route::post('/', [MessageController::class, 'store'])->name('store');
+});
+
+
