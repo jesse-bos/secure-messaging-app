@@ -79,4 +79,13 @@ class MessageController extends Controller
         }
     }
 
+    public function destroy(string $token): RedirectResponse
+    {
+        $message = Message::where('token', $token)->firstOrFail();
+
+        $message->delete();
+
+        return redirect('/');
+    }
+
 }

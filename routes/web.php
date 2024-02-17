@@ -23,6 +23,7 @@ Route::prefix('messages')->name('messages.')->group(function () {
     Route::post('/', [MessageController::class, 'store'])->name('store');
     Route::get('/{token}', [MessageController::class, 'show'])->name('show');
     Route::post('/{token}/authenticate', [MessageController::class, 'authenticate'])->name('authenticate');
+    Route::delete('/{token}', [MessageController::class, 'destroy'])->name('destroy');
 });
 
 

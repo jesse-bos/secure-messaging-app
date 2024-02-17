@@ -5,6 +5,11 @@
     @if ($authenticated)
         <h1 class="mb-4">Bericht</h1>
         <p>{{ $body }}</p>
+        <form method="POST" action="{{ route('messages.destroy', $token) }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-primary">Bericht gelezen</button>
+        </form>
     @else
         <h1 class="mb-4">Open bericht</h1>
 
