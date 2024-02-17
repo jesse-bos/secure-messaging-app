@@ -27,7 +27,9 @@
     @if (session('messageStored'))
         <x-notifications.success>
             <div class="mb-2">
-                Bericht succesvol versleuteld! Gebruik onderstaande gegevens om het bericht te openen.
+                Bericht succesvol versleuteld! Gebruik onderstaande gegevens om het bericht te openen. De
+                URL is 30 minuten
+                geldig.
             </div>
             <div class="mb-2">
                 <a href="{{ session('messageStored')['url'] }}">Ontsleutel pagina</a>

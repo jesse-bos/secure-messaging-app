@@ -36,7 +36,7 @@ class MessageController extends Controller
 
         $url = URL::temporarySignedRoute(
             'messages.show',
-            now()->addMinutes(1),
+            now()->addMinutes(30),
             ['token' => $token]
         );
 
